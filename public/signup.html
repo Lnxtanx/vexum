@@ -166,56 +166,49 @@
     <p class="login-link">Already have an account? <a href="login.html">Login here</a></p>
   </div>
   <script>
-    import { supabase } from "./js/supabase.js";
+  import { supabase } from './js/supabase.js';
 
-    const signupForm = document.getElementById("signup-form");
-
-    signupForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const username = document.getElementById("username").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirmPassword").value;
-
-      if (password !== confirmPassword) {
-        alert("Passwords do not match!");
-        return;
-      }
-
-      // ✅ Step 1: Sign Up User in Supabase Auth
-      let { data, error } = await supabase.auth.signUp({ email, password });
-
-      if (error) {
-        alert("Error signing up: " + error.message);
-        return;
-      }
-
-      const user = data.user;
-
-      if (!user) {
-        alert("Sign-up successful! A confirmation email has been sent.");
-        return;
-      }
-
-      // ✅ Step 2: Insert Profile in Database
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .upsert({
-          id: user.id, // Ensure user ID matches auth.uid()
-          username: username,
-          email: email
-        });
-
-      if (profileError) {
-        alert("Profile creation failed: " + profileError.message);
-        return;
-      }
-
-      alert("Sign-up successful! You can now log in.");
-      window.location.href = "login.html";
-    });
-  </script>
+  const signupForm = document.getElementById("signup-form");
+  
+  signupForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+  
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+  
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+  
+    let { data, error } = await supabase.auth.signUp({ email, password });
+  
+    if (error) {
+      alert("Error signing up: " + error.message);
+      return;
+    }
+  
+    const user = data.user;
+    if (!user) {
+      alert("Sign-up successful! Check email confirmation link.");
+      return;
+    }
+  
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .upsert({ id: user.id, username, email });
+  
+    if (profileError) {
+      alert("Profile creation failed: " + profileError.message);
+      return;
+    }
+  
+    alert("Sign-up successful! You can now log in.");
+    window.location.href = "login.html";
+  });
+</script>  
 </body>
 
 </html>
