@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vexum - Random Video Chat &amp; Secure Calls</title>
+
+  <!-- Primary Meta Tags -->
+  <meta name="description" content="Vexum: A black & pink futuristic random video chat platform for adults and teens. Call random girls, meet new people, and enjoy secure, anonymous communication.">
+  <meta name="keywords" content="vexum, random video chat, black pink design, adult video chat, teen chat, call random girls, free chat, secure calls, chat with strangers, random girls, teen chat, end-to-end encryption, global matching, meet new people, advanced chat, pink neon, futuristic design" />
+  <meta name="robots" content="index, follow"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- Open Graph / Social (Optional) -->
+  <meta property="og:title" content="Vexum - Futuristic Pink & Black Random Video Chat"/>
+  <meta property="og:description" content="Secure, anonymous, and global random video chat. Meet teens, call random girls, or talk to new friends in a neon-futuristic environment."/>
+  <meta property="og:image" content="path/to/screenshot.jpg"/><!-- Update with your image URL -->
+  <meta property="og:url" content="https://yourdomain.com"/><!-- your site URL -->
+
+  <!-- Favicon / Logo (larger sized for testing) -->
+  <link rel="icon" href="vexum.logo.png"  />
+  
+  <style>
+    /* GLOBAL RESET & BODY */
+    * {
+      margin: 0; 
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Arial", sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #000000 0%, #ff00ff 100%);
+      /* Black -> Pink gradient */
+      color: #fff;
+      min-height: 100vh;
+      overflow-y: auto; /* Enable scrolling */
+      position: relative;
+      padding: 2rem;
+    }
+
+    /* LARGE LOGO/ICON AT TOP */
+    .logo-container {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .logo-container img {
+      width: 150px; /* Increase or adjust to your preference */
+      height: auto;
+      filter: drop-shadow(0 0 10px #ff00ff);
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+    .logo-container img:hover {
+      transform: scale(1.08);
+    }
+
+    /* FLOATING ORBS (PINK NEON) */
+    .neon-orb {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.5;
+      filter: blur(60px);
+      animation: floatOrb 9s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+    .neon-orb:nth-child(1) {
+      width: 250px; height: 250px; 
+      background: #ff00ff;
+      top: 10%; left: 15%;
+      animation-delay: 0s;
+    }
+    .neon-orb:nth-child(2) {
+      width: 350px; height: 350px;
+      background: #ff1493;
+      top: 60%; left: 70%;
+      animation-delay: 2s;
+    }
+    @keyframes floatOrb {
+      from { transform: translateY(-30px); }
+      to   { transform: translateY(30px); }
+    }
+
+    /* MAIN CONTAINER BOX */
+    .container {
+      position: relative;
+      z-index: 1; /* Above orbs */
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 14px;
+      box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+      padding: 2rem 3rem;
+      margin-bottom: 3rem;
+    }
+
+    /* HEADINGS */
+    h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #ff00ff, #ff1493);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
+    }
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #ffb3ff;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+    }
+    p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    /* FEATURES */
+    .features {
+      margin-top: 2rem;
+    }
+    .features ul {
+      list-style: none;
+      margin-top: 1rem;
+      padding-left: 0;
+    }
+    .features li {
+      margin: 12px 0;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s;
+    }
+    .features li:hover {
+      transform: translateX(10px) scale(1.02);
+      box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.2),
+                  0 0 12px rgba(255, 0, 255, 0.2);
+    }
+    .features li::before {
+      content: "✨";
+      font-size: 1.5rem;
+      color: #ff66b2;
+    }
+
+    /* CTA BUTTON */
+    .btn {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 14px 28px;
+      background: linear-gradient(45deg, #ff00ff, #ff66b2, #ff1493);
+      color: #fff;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: 0.3s;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(255, 0, 255, 0.5);
+      text-align: center;
+    }
+    .btn:hover {
+      background: linear-gradient(45deg, #ff1493, #ff66b2, #ff00ff);
+      box-shadow: 0 6px 15px rgba(255, 0, 255, 0.7);
+      transform: translateY(-3px);
+    }
+
+    /* Extra Content for Scrolling */
+    .extra-section {
+      margin-top: 2rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 1.5rem;
+    }
+    .extra-section h3 {
+      margin-bottom: 1rem;
+      font-size: 1.6rem;
+      background: linear-gradient(45deg, #ff00ff, #ff1493);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  </style>
+</head>
+<body>
+  <!-- Floating neon orbs -->
+  <div class="neon-orb"></div>
+  <div class="neon-orb"></div>
+
+  <!-- Possibly a bigger "favicon" style logo at top -->
+  <div class="logo-container">
+    <img src="vexum.logo.png" alt="Vexum Logo" />
+  </div>
+
+  <div class="container">
+    <h1>Vexum</h1>
+    <h2>Black &amp; Pink Futuristic Random Video Chat</h2>
+    <p>
+      <strong>Vexum</strong> is your one-stop platform for secure, anonymous, and 
+      <em>futuristic</em> random video chat experiences. Whether you’re looking to 
+      <strong>call random girls</strong>, meet new teens, or simply have fun conversations 
+      with strangers, Vexum’s advanced encryption and no-data storage ensure your privacy 
+      remains intact.
+    </p>
+
+    <div class="features">
+      <h2>Why Vexum Stands Out</h2>
+      <ul>
+        <li>End-to-End Encrypted Streams – 100% secure, no third-party intrusion.</li>
+        <li>Teen &amp; Adult Friendly – A wide user base from diverse age groups.</li>
+        <li>Black & Pink Futuristic UI – Enjoy a neon-infused design that excites the senses.</li>
+        <li>Random Girls Chat – Connect or flirt spontaneously, no sign-up complexity.</li>
+        <li>Global Matches – Chat with people worldwide, forging new cultural bonds.</li>
+      </ul>
+    </div>
+
+    <p>
+      Step into a <strong>pink-neon dream</strong> where calls happen instantly, 
+      letting you explore friendships, relationships, or casual chat across the globe. 
+      We combine blazing-fast servers with a chic interface for an experience 
+      you wont forget.
+    </p>
+
+    <a href="login.html" class="btn">Start Chatting Now</a>
+
+    <!-- Extra Section for more text (scrolling) -->
+    <div class="extra-section">
+      <h3>Explore More Features</h3>
+      <p>
+        Our random video chat caters to a broad audience: 
+        from <strong>adult apps seekers</strong> to <strong>teenagers</strong> 
+        exploring new ways to socialize. Using Vexum is as simple as pressing “Connect,” 
+        and letting our advanced matching system do the rest. 
+      </p>
+      <p>
+        By focusing on <em>privacy, speed, and stylish design</em>, 
+        we have created the ultimate space for random interactions. 
+        Each connection is ephemeral—no logs, no data. 
+        If you want to keep in touch, you can exchange details by choice, 
+        but Vexum never forces identity sharing.
+      </p>
+      <p>
+        Ready to transform how you communicate? Jump in. We’ll handle 
+        the encryption and neon vibe. You just bring your curiosity 
+        and sense of adventure!
+      </p>
+      <a href="/public/login.html" class="btn">Join Now</a>
+    </div>
+  </div>
+</body>
+</html>

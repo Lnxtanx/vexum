@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>vexum</title>
+   <!-- Favicon / Logo (larger sized for testing) -->
+   <link rel="icon" href="/app/vexum.logo.png" sizes="192x192" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    .main-container {
+      display: flex;
+      height: 100vh;
+      background-color: #121111;
+      position: relative;
+    }
+
+    .top-left-button,
+    .bottom-left-button {
+      position: absolute;
+      left: 10px;
+      padding: 8px 15px;
+      background: #444654;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    .top-left-button { top: 10px; }
+    .bottom-left-button { bottom: 10px; }
+
+    .video-call-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+    }
+
+    /* Control buttons (Mute, Start, Skip) */
+    .controls {
+      margin: 10px 0;
+      display: flex;
+      gap: 10px;
+    }
+    .controls button {
+      padding: 8px 15px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .mute-btn    { background-color: #f0ad4e; color: #000; }
+    .start-btn   { background-color: #5cb85c; color: #fff; }
+    .skip-btn    { background-color: #5bc0de; color: #fff; }
+
+    .video-stream {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+    }
+
+    .local-video,
+    .remote-video {
+      width: 45%;
+      height: 300px;
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+    .local-video video {
+      transform: scaleX(-1);
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* End Call Button */
+    #end-call-btn {
+      position: absolute;
+      bottom: 20px;
+      background: red;
+      border: none;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    #end-call-btn img {
+      width: 40px;
+      height: 40px;
+    }
+    .d-none { display: none; }
+
+    /* Right Sidebar: Online Users */
+    .caller-list-wrapper {
+      width: 15%;
+      background: #343541;
+      padding: 20px;
+      border-left: 2px solid #100b0b;
+      position: relative;
+      transition: filter 0.4s, opacity 0.4s;
+    }
+    .caller-list-heading {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+    .caller-list {
+      list-style: none;
+      padding: 0;
+      color: #fff;
+    }
+    .caller-list li {
+      margin-bottom: 8px;
+    }
+    .call-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px;
+      margin-left: 8px;
+    }
+    .call-btn i {
+      transition: transform 0.2s ease-in-out;
+    }
+    .call-btn:hover i {
+      transform: scale(1.2);
+    }
+
+    /* Blurred / disabled style for restricted content */
+    .blurred {
+      filter: blur(4px);
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    /* "Buy Plan" button within the right section if unsubscribed */
+    #buyPlanBtn {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      padding: 8px 12px;
+      background: #e67e22;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #buyPlanBtn:hover {
+      background: #d35400;
+    }
+
+  </style>
+</head>
+<body>
+  <main class="main-container">
+    <!-- Video Call Section -->
+    <section class="video-call-container">
+      <div class="controls">
+        <button id="mute-btn" class="mute-btn">Mute</button>
+        <button id="start-btn" class="start-btn">Start</button>
+        <button id="skip-btn" class="skip-btn">Skip</button>
+      </div>
+
+      <div class="video-stream">
+        <div class="local-video">
+          <video id="localVideo" autoplay muted playsinline></video>
+        </div>
+        <div class="remote-video">
+          <video id="remoteVideo" autoplay playsinline></video>
+        </div>
+      </div>
+
+      <button id="end-call-btn" class="call call-disconnect d-none">End</button>
+    </section>
+
+    <!-- Right Sidebar -->
+    <aside class="caller-list-wrapper" id="rightSidebar">
+      <h1 class="caller-list-heading h-font">Online Users</h1>
+      <ul id="allusers" class="caller-list"></ul>
+      <!-- We'll show this button only if unsubscribed -->
+      <button id="buyPlanBtn" style="display: none;">Buy Plan</button>
+    </aside>
+
+    <!-- Profile & Plans Buttons -->
+    <a href="profile.html" class="top-left-button">Profile</a>
+    <a href="plans.html" class="bottom-left-button">Plans</a>
+  </main>
+
+  <script type="module">
+    import { supabase } from './js/supabase.js';
+    import { initHome, startMyVideo } from './js/main.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1) Check if user is logged in
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        // If no session, redirect to login
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // ~~~~~~~~~~~~~ FREE TRIAL CHECK ~~~~~~~~~~~~~
+      // If free trial is over => block entire page
+      const userCreatedAtStr = session.user.created_at;
+      const createdDate = new Date(userCreatedAtStr);
+      const now = new Date();
+      const diffMs = now - createdDate; // ms since sign-up
+      const diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+      // 14-day free trial
+      if (diffDays >= 14) {
+        // Free trial expired => redirect to plans page
+        alert('Your free trial has ended. Please purchase a plan to continue.');
+        window.location.href = 'plans.html';
+        return;
+      }
+
+      // If user is within free trial, or possibly has a plan => carry on
+
+      // 2) Fetch the username from "profiles"
+      const userId = session.user.id;
+      const { data: profile, error: profileErr } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('id', userId)
+        .single();
+
+      if (profileErr || !profile) {
+        alert('Error: Could not fetch your username. Defaulting to Anonymous.');
+        initHome("Anonymous");
+      } else {
+        initHome(profile.username || "Anonymous");
+      }
+
+      // 3) Start local video
+      startMyVideo();
+
+      // ~~~~~~~~~~~~~ SUBSCRIPTION CHECK ~~~~~~~~~~~~~
+      // If user has no active plan => blur right side & show "Buy Plan" button
+      const { data: payments, error: payErr } = await supabase
+        .from('payments')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('status', 'active')
+        .limit(1);
+
+      const rightSidebar = document.getElementById('rightSidebar');
+      const buyPlanBtn = document.getElementById('buyPlanBtn');
+
+      if (payErr) {
+        console.log('Error checking subscription:', payErr.message);
+        // assume unsubscribed => blur
+        restrictSidebar();
+      } else if (!payments || payments.length === 0) {
+        // No active subscription => restrict
+        restrictSidebar();
+      } else {
+        // Has at least one active plan => remove blur
+        allowSidebar();
+      }
+
+      // "Buy Plan" button => redirect to 'plans.html'
+      buyPlanBtn.addEventListener('click', () => {
+        window.location.href = 'plans.html';
+      });
+
+      function restrictSidebar() {
+        rightSidebar.classList.add('blurred');
+        buyPlanBtn.style.display = 'block';
+      }
+
+      function allowSidebar() {
+        rightSidebar.classList.remove('blurred');
+        buyPlanBtn.style.display = 'none';
+      }
+    });
+  </script>
+
+  <!-- Time Tracking (if needed) -->
+  <script type="module">
+    import { initTimeTracker } from './js/timeTracker.js';
+    initTimeTracker();
+  </script>
+
+  <script src="/socket.io/socket.io.js"></script>
+</body>
+</html>

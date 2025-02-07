@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>vexum - Login</title>
+   <!-- Favicon / Logo (larger sized for testing) -->
+   <link rel="icon" href="vexum.logo.png" sizes="192x192" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #02101f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+      flex-direction: column;
+      color: white;
+    }
+
+    /* Top-left navigation links */
+    .top-links {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+    .top-links a {
+      margin-right: 20px;
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .top-links a:hover {
+      text-decoration: underline;
+    }
+
+    h1 {
+      font-size: 70px;
+      display: flex;
+      gap: 10px;
+      margin: 0;
+    }
+
+    h1 span {
+      animation: glow 2s ease-in-out infinite, float 3s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    /* Floating animation for vexum letters */
+    @keyframes float-alt {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    /* Glowing effect for vexum letters */
+    @keyframes glow {
+      0% {
+        text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+      }
+      50% {
+        text-shadow: 0 0 15px #00ffcc, 0 0 30px #00ffcc, 0 0 45px #00ffcc, 0 0 60px #00ffcc;
+      }
+      100% {
+        text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+      }
+    }
+
+    /* Floating animation for individual letters */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-15px); }
+    }
+
+    h1 span:nth-child(1) {
+      color: #FF4C4C;
+    }
+    h1 span:nth-child(2) {
+      color: #FFA94C;
+      animation-delay: 0.2s;
+    }
+    h1 span:nth-child(3) {
+      color: #FFE74C;
+      animation-delay: 0.4s;
+    }
+    h1 span:nth-child(4) {
+      color: #4CFF4C;
+      animation-delay: 0.6s;
+    }
+    h1 span:nth-child(5) {
+      color: #4C9BFF;
+      animation-delay: 0.8s;
+    }
+    h1 span:nth-child(6) {
+      color: #A44CFF;
+      animation-delay: 1s;
+    }
+
+    .login-container {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-container h2 {
+      margin-bottom: 20px;
+      font-size: 24px;
+      text-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff;
+    }
+
+    .login-container form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .login-container input {
+      margin-bottom: 15px;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      outline: none;
+    }
+    .login-container input[type="email"],
+    .login-container input[type="password"] {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid #00ffcc;
+      transition: 0.3s;
+    }
+    .login-container input[type="email"]:focus,
+    .login-container input[type="password"]:focus {
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 10px #00ffcc;
+    }
+
+    .login-container input[type="submit"] {
+      background-color: #00ffcc;
+      color: black;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .login-container input[type="submit"]:hover {
+      background-color: #00e6b8;
+    }
+
+    .signup {
+      margin-top: 10px;
+    }
+    .signup a {
+      color: #00ffcc;
+      text-decoration: none;
+    }
+    .signup a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <header style="position: absolute; top: 20px; right: 20px; display: flex; align-items: center; gap: 10px;">
+    <a href="homepage.html" style="font-size: 20px; color: #00ffcc; text-decoration: none;">
+      <img src="vexum.logo.png" alt="Vexum Logo" style="width: 32px; height: auto;" />
+    </a>
+    
+    <!-- Floating and glowing Resona text -->
+    <div class="floating-resona" style="display: flex; gap: 5px;">
+      <span style="color: #FF4C4C; animation: float-alt 3s ease-in-out infinite, glow 2s ease-in-out infinite;">V</span>
+      <span style="color: #FFA94C; animation: float-alt 3s ease-in-out infinite, glow 2s ease-in-out infinite; animation-delay: 0.2s;">e</span>
+      <span style="color: #FFE74C; animation: float-alt 3s ease-in-out infinite, glow 2s ease-in-out infinite; animation-delay: 0.4s;">x</span>
+      <span style="color: #4CFF4C; animation: float-alt 3s ease-in-out infinite, glow 2s ease-in-out infinite; animation-delay: 0.6s;">u</span>
+      <span style="color: #4C9BFF; animation: float-alt 3s ease-in-out infinite, glow 2s ease-in-out infinite; animation-delay: 0.8s;">m</span>
+    </div>
+  </header>
+
+  <!-- Top-left navigation links -->
+  <div class="top-links">
+    <a href="login.html">Login</a>
+    <a href="signup.html">Signup</a>
+  </div>
+
+  <!-- Floating, glowing title -->
+  <h1>
+    <span>v</span>
+    <span>e</span>
+    <span>x</span>
+    <span>u</span>
+    <span>m</span>
+  </h1>
+
+  <!-- Login container -->
+  <div class="login-container">
+    <h2>Login</h2>
+    <!-- Give the form an ID for easy JS selection -->
+    <form id="login-form">
+      <!-- Use email instead of 'username' because Supabase Auth uses email/password by default -->
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <input type="submit" value="Login" />
+    </form>
+    <p class="signup">Don't have an account? <a href="signup.html">Sign up</a></p>
+  </div>
+
+  <!-- Script to handle login with Supabase -->
+  <script type="module">
+    import { supabase } from './js/supabase.js';
+
+    const loginForm = document.getElementById('login-form');
+
+    loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      // Attempt to sign in
+      let { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        alert('Error logging in: ' + error.message);
+        return;
+      }
+
+      // data.session contains the authenticated user's session if successful
+      if (!data.session) {
+        // This can happen if the user hasn't confirmed their email or something else is misconfigured
+        alert('Login successful, but no active session returned. Make sure your email is confirmed!');
+        return;
+      }
+
+      alert('Login successful!');
+      // Redirect to homepage, profile, or wherever you want
+      window.location.href = 'homepage.html';
+    });
+  </script>
+
+</body>
+</html>

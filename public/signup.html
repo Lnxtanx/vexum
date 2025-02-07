@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>vexum- Signup</title>
+   <!-- Favicon / Logo (larger sized for testing) -->
+   <link rel="icon" href="vexum.logo.png" sizes="192x192" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(45deg, #141E30, #243B55);
+      color: white;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .top-links {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+    .top-links a {
+      margin-right: 20px;
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .top-links a:hover {
+      text-decoration: underline;
+    }
+
+    h1 {
+      font-size: 60px;
+      color: #00ffcc;
+      text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+      }
+      to {
+        text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 40px #00ffcc, 0 0 60px #00ffcc;
+      }
+    }
+
+    .signup-container {
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .signup-container h2 {
+      margin-bottom: 20px;
+      color: #ffffff;
+      text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff;
+    }
+
+    .signup-container form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .signup-container input {
+      margin-bottom: 15px;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    .signup-container input[type="text"],
+    .signup-container input[type="email"],
+    .signup-container input[type="password"] {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid #00ffcc;
+      transition: 0.3s;
+    }
+    .signup-container input[type="text"]:focus,
+    .signup-container input[type="email"]:focus,
+    .signup-container input[type="password"]:focus {
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 10px #00ffcc;
+    }
+
+    .signup-container input[type="submit"] {
+      background-color: #00ffcc;
+      color: black;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .signup-container input[type="submit"]:hover {
+      background-color: #00e6b8;
+    }
+
+    .login-link {
+      margin-top: 10px;
+      color: #00ffcc;
+    }
+    .login-link a {
+      color: #00ffcc;
+      text-decoration: none;
+    }
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header style="position: absolute; top: 20px; right: 20px; display: flex; align-items: center; gap: 10px;">
+    <a href="homepage.html" style="font-size: 20px; color: #00ffcc; text-decoration: none;">
+      <img src="vexum.logo.png" alt="Vexum Logo" style="width: 32px; height: auto;" />
+    </a>
+    
+    <div class="floating-resona" style="display: flex; gap: 5px;">
+      <span style="color: #FF4C4C; animation: float-alt 3s ease-in-out infinite, glow 2s ease-in-out infinite;">V</span>
+      <span style="color: #FFA94C; animation: float-alt 3s ease-in-out infinite, glow 2s ease-in-out infinite; animation-delay: 0.2s;">e</span>
+      <span style="color: #FFE74C; animation: float-alt 3s ease-in-out infinite, glow 2s ease-in-out infinite; animation-delay: 0.4s;">x</span>
+      <span style="color: #4CFF4C; animation: float-alt 3s ease-in-out infinite, glow 2s ease-in-out infinite; animation-delay: 0.6s;">u</span>
+      <span style="color: #4C9BFF; animation: float-alt 3s ease-in-out infinite, glow 2s ease-in-out infinite; animation-delay: 0.8s;">m</span>
+    </div>
+  </header>
+
+  <div class="top-links">
+    <a href="login.html">Login</a>
+    <a href="signup.html">Signup</a>
+  </div>
+
+  <h1>Sign Up</h1>
+
+  <div class="signup-container">
+    <h2>Create Your Account</h2>
+    <form id="signup-form">
+      <input type="text" id="username" placeholder="Username" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <input type="password" id="confirmPassword" placeholder="Confirm Password" required />
+      <input type="submit" value="Sign Up" />
+    </form>
+    <p class="login-link">Already have an account? <a href="login.html">Login here</a></p>
+  </div>
+
+  <script type="module">
+    // Import your Supabase instance
+    import { supabase } from './js/supabase.js';
+
+    const signupForm = document.getElementById('signup-form');
+
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+      }
+
+      // 1) Create Auth user in Supabase
+      let { data, error } = await supabase.auth.signUp({ email, password });
+      if (error) {
+        alert('Error signing up: ' + error.message);
+        return;
+      }
+
+      // "data.user" or "data.session" can be null if email confirmation is required and the user must verify via email.
+      // see https://supabase.com/docs/guides/auth for details
+      const user = data.user;
+      if (!user) {
+        // If email confirmations are required, user won't be fully "confirmed" until they click the link
+        alert("Sign-up successful! A confirmation email has been sent. " + 
+              "Please confirm your email before logging in.");
+        return;
+      }
+
+      // 2) If signUp was successful and autoConfirm is enabled (or user is already confirmed),
+      //    upsert a row in the 'profiles' table to store the username.
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert({
+          id: user.id, // user’s auth UUID
+          username: username || null
+        });
+
+      if (profileError) {
+        alert("Profile creation failed: " + profileError.message);
+        return;
+      }
+
+      alert("Sign-up successful! Check your email for confirmation, then you can log in.");
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>

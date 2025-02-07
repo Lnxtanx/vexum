@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Favicon / Logo (larger sized for testing) -->
+  <link rel="icon" href="vexum.logo.png" sizes="192x192" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    :root {
+      --primary-color: #00ff9d;
+      --secondary-color: #0066ff;
+      --bg-color: #0a0a0a;
+      --card-bg: rgba(255, 255, 255, 0.05);
+    }
+
+    body {
+      background: var(--bg-color);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+    }
+
+    .container {
+      position: relative;
+      width: 1100px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      padding: 30px;
+    }
+
+    .profile-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 0 30px rgba(0, 255, 157, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .profile-img {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid var(--primary-color);
+      box-shadow: 0 0 30px var(--primary-color);
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .profile-img:hover::after {
+      content: "\f030";
+      font-family: "Font Awesome 5 Free";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2em;
+      color: white;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .profile-img input[type="file"] {
+      display: none;
+    }
+
+    .profile-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-info h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .profile-info p {
+      font-size: 1.2em;
+      opacity: 0.8;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      transition: 0.3s;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 20px var(--primary-color);
+    }
+
+    .stat-value {
+      font-size: 2em;
+      font-weight: bold;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-label {
+      opacity: 0.8;
+      margin-top: 10px;
+    }
+
+    .logout-btn {
+      padding: 10px 25px;
+      border-radius: 20px;
+      background: transparent;
+      border: 1px solid var(--primary-color);
+      color: var(--primary-color);
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: var(--primary-color);
+      color: var(--bg-color);
+    }
+
+    .active-plan-section {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .active-plan-section h2 {
+      margin-bottom: 20px;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .plan-details {
+      line-height: 1.8;
+      font-size: 1.1em;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Profile Card -->
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-img" onclick="document.getElementById('fileInput').click()">
+          <input type="file" id="fileInput" accept="image/*" />
+          <img src="https://via.placeholder.com/200" alt="Profile Image" id="profileImage" />
+        </div>
+        <div class="profile-info">
+          <h1 id="usernameDisplay">Username</h1>
+          <p>Connects Beyond Limits</p>
+        </div>
+      </div>
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-value" id="timeSpent">0h 0m</div>
+          <div class="stat-label">Total Time Spent</div>
+        </div>
+        <div class="stat-card">
+          <!-- We'll dynamically update "Days" left below -->
+          <div class="stat-value" id="timeRemaining">14 Days</div>
+          <div class="stat-label">Free Trial Remaining</div>
+        </div>
+        <div class="stat-card">
+          <button class="logout-btn" id="logoutBtn">Logout</button>
+          <div class="stat-label">Secure Session</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Plan Section -->
+    <div class="active-plan-section" id="activePlanSection">
+      <h2>Active Plan</h2>
+      <div id="planDetails" class="plan-details">Loading plan details...</div>
+    </div>
+  </div>
+
+  <!-- This snippet is the script portion in "profile.html" -->
+  <script type="module">
+    import { supabase } from './js/supabase.js';
+    import { getCurrentTotalSeconds } from './js/timeTracker.js';
+
+    // 1) Check if user is logged in
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      window.location.href = 'login.html'; // if not logged in
+    }
+
+    const userId = session.user.id;
+
+    // Keep track of an "active plan" (if any)
+    let globalActivePlan = null;
+
+    // 2) Fetch user profile from 'profiles'
+    let { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('username, avatar_url')
+      .eq('id', userId)
+      .single();
+
+    if (!profileError && profile) {
+      document.getElementById('usernameDisplay').textContent = profile.username || "Unknown User";
+      if (profile.avatar_url) {
+        document.getElementById('profileImage').src = profile.avatar_url;
+      }
+    }
+
+    // 3) Avatar upload
+    const fileInput = document.getElementById('fileInput');
+    fileInput.addEventListener('change', async (e) => {
+      if (!e.target.files || e.target.files.length === 0) return;
+
+      const file = e.target.files[0];
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${userId}.${fileExt}`;
+
+      let { error: uploadErr } = await supabase
+        .storage
+        .from('avatars')
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadErr) {
+        alert('Error uploading avatar: ' + uploadErr.message);
+        return;
+      }
+
+      // Get public URL
+      const { data: publicUrlData } = supabase
+        .storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      if (publicUrlData) {
+        document.getElementById('profileImage').src = publicUrlData.publicUrl;
+      }
+
+      // Update 'profiles.avatar_url'
+      let { error: updateErr } = await supabase
+        .from('profiles')
+        .update({ avatar_url: publicUrlData.publicUrl })
+        .eq('id', userId);
+
+      if (updateErr) {
+        alert('Error updating profile avatar: ' + updateErr.message);
+      }
+    });
+
+    // 4) Fetch active plan
+    let { data: payments, error: pmtError } = await supabase
+      .from('payments')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('status', 'active')
+      .order('payment_date', { ascending: false })
+      .limit(1);
+
+    const planDetailsEl = document.getElementById('planDetails');
+    if (pmtError) {
+      console.log('Error fetching payments:', pmtError.message);
+      planDetailsEl.textContent = "No active plan (error fetching data).";
+    } else if (!payments || payments.length === 0) {
+      planDetailsEl.textContent = "No active plan.";
+    } else {
+      let activePlan = payments[0];
+      globalActivePlan = activePlan; // store globally
+
+      const planName = activePlan.plan_name;
+      const payDate = new Date(activePlan.payment_date).toLocaleString();
+      const status = activePlan.status;
+      const validUntil = activePlan.valid_until
+        ? new Date(activePlan.valid_until).toLocaleString()
+        : 'N/A';
+
+      planDetailsEl.innerHTML = `
+        <strong>Plan Name:</strong> ${planName}<br/>
+        <strong>Status:</strong> ${status}<br/>
+        <strong>Purchased On:</strong> ${payDate}<br/>
+        <strong>Valid Until:</strong> ${validUntil}
+      `;
+    }
+
+    // 5) Show "Total Time Spent" by polling getCurrentTotalSeconds() every second
+    setInterval(() => {
+      const totalSec = getCurrentTotalSeconds();
+      const hours = Math.floor(totalSec / 3600);
+      const minutes = Math.floor((totalSec % 3600) / 60);
+      document.getElementById('timeSpent').textContent = `${hours}h ${minutes}m`;
+    }, 1000);
+
+    // 6) Instead of a fixed free trial countdown, decide based on active plan
+    //    - If no active plan => leftover free trial
+    //    - If active plan => days until activePlan.valid_until
+    const countdownElement = document.getElementById('timeRemaining');
+
+    function updatePlanCountdown() {
+      const now = new Date();
+      let daysLeft = 0;
+
+      if (globalActivePlan) {
+        // If there's an active plan, base it on valid_until
+        const vu = new Date(globalActivePlan.valid_until);
+        const diffMs = vu - now;
+        daysLeft = diffMs / (1000 * 60 * 60 * 24);
+        if (daysLeft < 0) daysLeft = 0;
+      } else {
+        // No active plan => show leftover free trial (14 days - used)
+        const userCreatedAtStr = session.user.created_at;
+        const userCreatedAt = new Date(userCreatedAtStr);
+        const diffMs = now - userCreatedAt;
+        const diffDays = diffMs / (1000 * 60 * 60 * 24);
+        daysLeft = 14 - diffDays;
+        if (daysLeft < 0) daysLeft = 0;
+      }
+      countdownElement.textContent = `${Math.floor(daysLeft)} Days`;
+    }
+
+    // Update the countdown every second
+    setInterval(updatePlanCountdown, 1000);
+    updatePlanCountdown();
+
+    // 7) Logout
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      window.location.href = 'login.html';
+    });
+  </script>
+
+  <!-- Initialize the time tracker logic on this page -->
+  <script type="module">
+    import { initTimeTracker } from './js/timeTracker.js';
+    initTimeTracker();
+  </script>
+</body>
+
+</html>

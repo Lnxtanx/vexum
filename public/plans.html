@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Subscription Plans</title>
+   <!-- Favicon / Logo (larger sized for testing) -->
+   <link rel="icon" href="vexum.logo.png" sizes="192x192" />
+  <style>
+    /* Global Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      padding: 2rem;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Floating hearts (optional decorative effect) */
+    .heart {
+      width: 20px; height: 20px;
+      background: #ff4081;
+      position: absolute; left: 50%;
+      animation: floatHearts 7s linear infinite;
+      transform: translateX(-50%) rotate(45deg);
+      border-radius: 50% 50% 0 50%;
+      opacity: 0.7;
+    }
+    .heart::after {
+      content: "";
+      width: 20px; height: 20px;
+      background: #ff4081;
+      position: absolute;
+      border-radius: 50%;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+    }
+    @keyframes floatHearts {
+      0%   { bottom: -10%; opacity: 0; }
+      10%  { opacity: 0.7; }
+      50%  { opacity: 1; }
+      100% { bottom: 120%; opacity: 0; }
+    }
+    .heart:nth-child(1) { left: 20%; animation-delay: 0s; }
+    .heart:nth-child(2) { left: 40%; animation-delay: 1.5s; width: 25px; height: 25px; }
+    .heart:nth-child(3) { left: 60%; animation-delay: 3s; }
+    .heart:nth-child(4) { left: 80%; animation-delay: 4.5s; width: 15px; height: 15px; }
+    .heart:nth-child(5) { left: 30%; animation-delay: 6s; }
+
+    /* Container for pricing columns */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+    .pricing-column {
+      background: #1c1c1c;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(130, 43, 43, 0.1);
+      flex: 1;
+      min-width: 280px;
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      margin: 1rem;
+    }
+    .pricing-column:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 0 20px #ff4081;
+    }
+    .badge {
+      background: #ff4081;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      font-size: 0.9rem;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+    }
+    h2 {
+      margin-bottom: 1rem;
+    }
+    .price {
+      font-size: 2.5rem;
+      margin: 1rem 0;
+      color: #ff4081;
+    }
+    .original-price {
+      text-decoration: line-through;
+      color: #999;
+      font-size: 1.2rem;
+      margin-left: 0.5rem;
+    }
+    ul {
+      list-style: none;
+      margin: 1.5rem 0;
+    }
+    li {
+      margin: 0.8rem 0;
+      color: #ccc;
+    }
+    .btn {
+      display: inline-block;
+      padding: 1rem 2rem;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      text-align: center;
+      width: 100%;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .advanced { background: #bc109f; color: white; }
+    .pro      { background: #b83782; color: white; }
+    .basic    { background: #a32788; color: white; }
+    .btn:hover {
+      opacity: 0.9; transform: scale(1.05);
+    }
+
+    /* Home icon (top-left corner) */
+    .home-icon {
+      position: fixed;
+      top: 5px; left: 6px;
+      font-size: 2rem;
+      text-decoration: none;
+      color: #ff4081;
+      z-index: 999;
+      transition: transform 0.3s;
+    }
+    .home-icon:hover {
+      transform: scale(1.2);
+    }
+
+    /* Help button (bottom-right corner) */
+    .help-button {
+      position: fixed;
+      bottom: 20px; right: 20px;
+      padding: 0.8rem 1.2rem;
+      background-color: #ff4081;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 8px;
+      text-decoration: none;
+      box-shadow: 0 3px 10px rgba(255,64,129,0.3);
+      z-index: 999;
+      transition: transform 0.3s;
+    }
+    .help-button:hover {
+      transform: scale(1.1);
+    }
+
+    /* ### UPI Payment Modal ### */
+    .modal-overlay {
+      display: none; /* hidden by default */
+      position: fixed; 
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      align-items: center; justify-content: center;
+      z-index: 9999;
+    }
+    .modal-content {
+      background: #1c1c1c;
+      padding: 2rem;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 500px;
+      width: 80%;
+      position: relative;
+    }
+    #closeModal {
+      position: absolute; top: 10px; right: 10px;
+      background: none; border: none;
+      color: #ff4081; font-size: 1.5rem; cursor: pointer;
+    }
+    #planTitle { color: #ff4081; margin-bottom: 1rem; }
+    #qrContainer {
+      margin: 1rem auto;
+    }
+    .confirm-btn {
+      background-color: #ff4081;
+      color: #fff;
+      padding: 0.8rem 1.2rem;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    .confirm-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Success message at top */
+    #topMessage {
+      text-align: center;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: #0f0;
+    }
+  </style>
+</head>
+<body>
+  <!-- hearts (decorative) -->
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+  <div class="heart"></div>
+
+  <!-- A place for success messages at the top -->
+  <p id="topMessage"></p>
+
+  <!-- Home icon (top-left) -->
+  <a href="homepage.html" class="home-icon">
+    <img src="vexum.logo.png" alt="Vexum Logo" style="width: 32px; height: auto;" />
+  </a>
+  
+  <!-- Help button (bottom-right) -->
+  <a href="mailto:vexum.contactus@gmail.com" class="help-button">Help</a>
+
+  <div class="container">
+    <!-- Advanced Plan -->
+    <div class="pricing-column">
+      <div class="badge">Valentine's Special</div>
+      <h2>Advanced Plan</h2>
+      <div class="price">$19<span class="original-price">$49</span></div>
+      <ul>
+        <li>250 Day Access</li>
+        <li>Unlimited Matches</li>
+        <li>Desire chat Option</li>
+        <li>Public &amp; Private Groups</li>
+        <li>Global Match</li>
+      </ul>
+      <button class="btn advanced" data-plan="Advanced" data-price-usd="19" data-validdays="250">
+        Choose Advanced
+      </button>
+    </div>
+
+    <!-- Pro Plan -->
+    <div class="pricing-column">
+      <h2>Pro Plan</h2>
+      <div class="price">$29</div>
+      <ul>
+        <li>100 Day Access</li>
+        <li>Unlimited Matches</li>
+        <li>Public &amp; Private Groups</li>
+        <li>Global Match</li>
+      </ul>
+      <button class="btn pro" data-plan="Pro" data-price-usd="29" data-validdays="100">
+        Choose Pro
+      </button>
+    </div>
+
+    <!-- Basic Plan -->
+    <div class="pricing-column">
+      <div class="badge">Valentine's Special</div>
+      <h2>Basic Plan</h2>
+      <div class="price">$3<span class="original-price">$9</span></div>
+      <ul>
+        <li>40 Day Access</li>
+        <li>Limited Matches</li>
+        <li>Basic Features</li>
+        <li>Desire chat option (Valentine special)</li>
+      </ul>
+      <button class="btn basic" data-plan="Basic" data-price-usd="3" data-validdays="40">
+        Choose Basic
+      </button>
+    </div>
+  </div>
+
+  <!-- UPI Payment Modal -->
+  <div class="modal-overlay" id="upiModal">
+    <div class="modal-content">
+      <button id="closeModal">&#x2715;</button>
+      <h3 id="planTitle">Pay for ??? Plan</h3>
+      <p>Amount in INR: <span id="amountLabel"></span></p>
+      <!-- We'll dynamically generate the QR code here -->
+      <div id="qrContainer"></div>
+
+      <p>UPI ID: <strong>vivekvenom138@okaxis</strong></p>
+      <p>Scan this code with your UPI app to pay.</p>
+      <button class="confirm-btn" id="confirmPaymentBtn">I have paid</button>
+    </div>
+  </div>
+
+  <!-- QRCode.js library (CDN) for dynamic code generation -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+  <!-- Supabase + Time Tracker -->
+  <!-- Supabase + Time Tracker -->
+<script type="module">
+  import { supabase } from './js/supabase.js';
+  import { initTimeTracker } from './js/timeTracker.js';
+
+  // Start time tracking
+  initTimeTracker();
+
+  // 1) Check user login
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    window.location.href = 'login.html';
+    throw new Error("Not logged in");
+  }
+  const userId = session.user.id;
+
+  // 2) Hardcoded USD->INR rate (adjust as needed)
+  const USD_TO_INR_RATE = 88;
+
+  // 3) Grab references
+  const topMessage          = document.getElementById('topMessage');
+  const planButtons         = document.querySelectorAll('.pricing-column .btn');
+  const upiModal            = document.getElementById('upiModal');
+  const closeModal          = document.getElementById('closeModal');
+  const confirmPaymentBtn   = document.getElementById('confirmPaymentBtn');
+  const planTitle           = document.getElementById('planTitle');
+  const amountLabel         = document.getElementById('amountLabel');
+  const qrContainer         = document.getElementById('qrContainer');
+
+  let chosenPlan = null;
+  let chosenDays = 0;
+  let priceINR   = 0;
+
+  // 4) On “Choose [Plan]” => Insert payment row & show UPI modal
+  planButtons.forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const planName  = btn.getAttribute('data-plan');
+      const priceUSD  = parseFloat(btn.getAttribute('data-price-usd'));
+      const validDays = parseInt(btn.getAttribute('data-validdays'));
+
+      chosenPlan = planName;
+      chosenDays = validDays;
+
+      // Convert to INR
+      priceINR = Math.round(priceUSD * USD_TO_INR_RATE);
+
+      // Insert payment row with status: 'pending'
+      const now = new Date();
+      const validUntil = new Date(now.getTime() + chosenDays * 24 * 60 * 60 * 1000).toISOString();
+
+      const { error } = await supabase
+        .from('payments')
+        .insert({
+          user_id: userId,
+          plan_name: planName,
+          amount: priceINR,
+          payment_date: now.toISOString(),
+          status: 'pending', // you will confirm manually
+          valid_until: validUntil
+        });
+
+      if (error) {
+        alert('Error recording payment: ' + error.message);
+        return;
+      }
+
+      // 5) Update top message
+      topMessage.textContent = `Your ${planName} plan is now pending. Please scan & pay below.`;
+
+      // 6) Show QR code in modal
+      planTitle.textContent = `Pay for ${planName} Plan`;
+      amountLabel.textContent = priceINR.toString();
+      qrContainer.innerHTML = ""; // Clear old QR
+
+      // Build the dynamic UPI link
+      const upiLink = `upi://pay?pa=vivekvenom138@okaxis&pn=Vivek&am=${priceINR}&cu=INR&tn=Subscription%20for%20${planName}`;
+
+      // Generate new QR code
+      new QRCode(qrContainer, {
+        text: upiLink,
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      // Display the modal
+      upiModal.style.display = 'flex';
+    });
+  });
+
+  // 7) Close modal when user clicks "X"
+  closeModal.addEventListener('click', () => {
+    upiModal.style.display = 'none';
+  });
+
+  // 8) "I have paid" button => just close modal (no DB insert needed)
+  confirmPaymentBtn.addEventListener('click', () => {
+    upiModal.style.display = 'none';
+    topMessage.textContent = "We have recorded your plan as pending. We will confirm payment manually.";
+    // If you want to redirect, do so here:
+    // window.location.href = 'profile.html';
+  });
+</script>
+
+</body>
+</html>
