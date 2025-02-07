@@ -5,6 +5,9 @@ import { Server } from "socket.io";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { createClient } from "@supabase/supabase-js";
+import dotenv from "dotenv";  // Load environment variables
+
+dotenv.config(); // Load .env fil
 
 
 const app = express();
