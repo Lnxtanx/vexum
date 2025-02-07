@@ -153,59 +153,55 @@
     <p class="login-link">Already have an account? <a href="login.html">Login here</a></p>
   </div>
 
-  <script type="module">
-    // Import your Supabase instance
-    import { supabase } from './js/supabase.js';
+  import { supabase } from "./js/supabase.js";
 
-    const signupForm = document.getElementById('signup-form');
-
-    signupForm.addEventListener('submit', async (e) => {
+  const signupForm = document.getElementById("signup-form");
+  
+  signupForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      const username = document.getElementById('username').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
-
+  
+      const username = document.getElementById("username").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+  
       if (password !== confirmPassword) {
-        alert("Passwords do not match!");
-        return;
+          alert("Passwords do not match!");
+          return;
       }
-
-      // 1) Create Auth user in Supabase
+  
+      // ✅ Step 1: Sign Up User in Supabase Auth
       let { data, error } = await supabase.auth.signUp({ email, password });
+  
       if (error) {
-        alert('Error signing up: ' + error.message);
-        return;
+          alert("Error signing up: " + error.message);
+          return;
       }
-
-      // "data.user" or "data.session" can be null if email confirmation is required and the user must verify via email.
-      // see https://supabase.com/docs/guides/auth for details
+  
       const user = data.user;
+  
       if (!user) {
-        // If email confirmations are required, user won't be fully "confirmed" until they click the link
-        alert("Sign-up successful! A confirmation email has been sent. " + 
-              "Please confirm your email before logging in.");
-        return;
+          alert("Sign-up successful! A confirmation email has been sent.");
+          return;
       }
-
-      // 2) If signUp was successful and autoConfirm is enabled (or user is already confirmed),
-      //    upsert a row in the 'profiles' table to store the username.
+  
+      // ✅ Step 2: Insert Profile in Database
       const { error: profileError } = await supabase
-        .from('profiles')
-        .upsert({
-          id: user.id, // user’s auth UUID
-          username: username || null
-        });
-
+          .from("profiles")
+          .upsert({
+              id: user.id, // Ensure user ID matches auth.uid()
+              username: username,
+              email: email
+          });
+  
       if (profileError) {
-        alert("Profile creation failed: " + profileError.message);
-        return;
+          alert("Profile creation failed: " + profileError.message);
+          return;
       }
-
-      alert("Sign-up successful! Check your email for confirmation, then you can log in.");
+  
+      alert("Sign-up successful! You can now log in.");
       window.location.href = "login.html";
-    });
-  </script>
+  });
+  
 </body>
 </html>
